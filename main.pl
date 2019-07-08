@@ -1,25 +1,11 @@
-lexer(Tokens) -->
-(
-    (
-    "+", !, {Token = tokValueAddOne} ;
-    "-", !, {Token = tokValueSubOne} ;
-    ">", !, {Token = tokAddrAddOne} ;
-    "<", !, {Token = tokAddrSubOne} ;
-    ",", !, {Token = tokRead} ;
-    ".", !, {Token = tokPrint} ;
-    "[", !, {Token = tokLoopBegin} ;
-    "]", !, {Token = tokLoopEnd} ;
-    [_],    {Token = tokUnknown} 
-    ), 
-    !,  { Tokens = [Token | TokList] }, lexer(TokList) ; 
-    [], { Tokens = [] }
-).
+:- consult('read_file.pl').
+:- consult('parser.pl').
 
-readFile(Characters) :-
-    open('example.bf', read, In),
-    get_char(In, Char),
-    process_stream(Char, In, [], Characters),
-    close(In).
-%:- readFile(Output), phrase(lexer(X), Output), print(X).
+main :- 
+    current_prolog_flag(argv, [Filename | _]), 
+    readFile(Filename, FileContent), 
+    parse(FileContent, AST),
+    print(AST), 
+    nl.
 
-:- readFile(O), print(O).
+:- main, halt.
