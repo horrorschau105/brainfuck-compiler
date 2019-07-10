@@ -4,9 +4,9 @@
 
 main :- 
     current_prolog_flag(argv, [Filename | _]), 
-    readFile(Filename, FileContent), 
+    read_file(Filename, FileContent), 
     parse(FileContent, AST),
     compile(AST, Program),
-    writeFile(Filename, Program).
+    write_file(Filename, Program).
 
 :- main, halt.

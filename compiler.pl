@@ -8,36 +8,36 @@ compile(program(SubInstructions), Acc, Program) :-
     append(Acc, [
         '#include <stdio.h>', 
         'int main() {', 
-        'char* ptr; ',
         'char t[30000];',
-        'ptr = &t[0];'], Acc1),
+        'char* ptr = &t[0];'
+        ], Acc1),
     compile(SubInstructions, SubProgram),
     append(Acc1, SubProgram, Acc2),
     append(Acc2, ['}'], Program).
 
-compile(readValue, Acc, Program) :-
+compile(read_value, Acc, Program) :-
     !,
     append(Acc, ['scanf("%c", ptr);'], Program).
 
-compile(printValue, Acc, Program) :-
+compile(print_value, Acc, Program) :-
     !,
     append(Acc, ['printf("%c", *ptr);'], Program).
 
-compile(incrementAddress, Acc, Program) :-
+compile(increment_address, Acc, Program) :-
     !,
     append(Acc, ['ptr++;'], Program).
 
-compile(decrementAddress, Acc, Program) :-
+compile(decrement_address, Acc, Program) :-
     !,
     append(Acc, ['ptr--;'], Program).
 
-compile(incrementValue, Acc, Program) :-
+compile(increment_value, Acc, Program) :-
     !,
-    append(Acc, ['*ptr++;'], Program).
+    append(Acc, ['(*ptr)++;'], Program).
 
-compile(decrementValue, Acc, Program) :-
+compile(decrement_value, Acc, Program) :-
     !,
-    append(Acc, ['*ptr--;'], Program).
+    append(Acc, ['(*ptr)--;'], Program).
 
 compile(loop(SubInstructions), Acc, Program) :-
     !,

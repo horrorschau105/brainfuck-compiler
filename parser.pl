@@ -1,15 +1,15 @@
 lexer(Tokens) -->
 (
     (
-    "+", !, {Token = tokValueAddOne} ;
-    "-", !, {Token = tokValueSubOne} ;
-    ">", !, {Token = tokAddrAddOne} ;
-    "<", !, {Token = tokAddrSubOne} ;
-    ",", !, {Token = tokRead} ;
-    ".", !, {Token = tokPrint} ;
-    "[", !, {Token = tokLoopBegin} ;
-    "]", !, {Token = tokLoopEnd} ;
-    [_],    {Token = tokUnknown} 
+    "+", !, {Token = tok_value_add_one} ;
+    "-", !, {Token = tok_value_sub_one} ;
+    ">", !, {Token = tok_addr_add_one} ;
+    "<", !, {Token = tok_addr_sub_one} ;
+    ",", !, {Token = tok_read} ;
+    ".", !, {Token = tok_print} ;
+    "[", !, {Token = tok_loop_begin} ;
+    "]", !, {Token = tok_loop_end} ;
+    [_],    {Token = tok_unknown} 
     ), 
     !,  { Tokens = [Token | TokList] }, lexer(TokList) ; 
     [], { Tokens = [] }
@@ -22,27 +22,27 @@ instructions(Instructions) -->
     instruction(Instruction), {Instructions = [Instruction]}.
 
 instruction(Ins) -->
-    [tokAddrAddOne], !, {Ins = incrementAddress} ;
-    [tokAddrSubOne], !, {Ins = decrementAddress} ;
-    [tokValueAddOne], !, {Ins = incrementValue} ;
-    [tokValueSubOne], !, {Ins = decrementValue} ;
-    [tokPrint], !, {Ins = printValue} ;
-    [tokRead], !, {Ins = readValue} ;
-    [tokLoopBegin], instructions(Instructions), [tokLoopEnd], {Ins = loop(Instructions)}.
+    [tok_addr_add_one], !, {Ins = increment_address} ;
+    [tok_addr_sub_one], !, {Ins = decrement_address} ;
+    [tok_value_add_one], !, {Ins = increment_value} ;
+    [tok_value_sub_one], !, {Ins = decrement_value} ;
+    [tok_print], !, {Ins = print_value} ;
+    [tok_read], !, {Ins = read_value} ;
+    [tok_loop_begin], instructions(Instructions), [tok_loop_end], {Ins = loop(Instructions)}.
 
-removeUnknownTokens(DirtyTokenList, ClearTokenList) :-
-    removeUnknownTokens(DirtyTokenList, [], ClearTokenList).
+remove_unknown_tokens(DirtyTokenList, ClearTokenList) :-
+    remove_unknown_tokens(DirtyTokenList, [], ClearTokenList).
 
-removeUnknownTokens([], Result, Result).
-removeUnknownTokens([tokUnknown | T], Acc, Result) :-
+remove_unknown_tokens([], Result, Result).
+remove_unknown_tokens([tok_unknown | T], Acc, Result) :-
     !,
-    removeUnknownTokens(T, Acc, Result).
+    remove_unknown_tokens(T, Acc, Result).
 
-removeUnknownTokens([KnownToken | T], Acc, Result) :-
+remove_unknown_tokens([KnownToken | T], Acc, Result) :-
     append(Acc, [KnownToken], NewAcc),
-    removeUnknownTokens(T, NewAcc, Result).
+    remove_unknown_tokens(T, NewAcc, Result).
 
 parse(FileContent, AST) :-
     phrase(lexer(Tokens), FileContent), 
-    removeUnknownTokens(Tokens, KnownTokens),
+    remove_unknown_tokens(Tokens, KnownTokens),
     phrase(program(AST), KnownTokens).

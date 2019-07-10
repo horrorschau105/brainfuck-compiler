@@ -9,25 +9,25 @@ process_stream(Char, Stream, Acc, Result) :-
     get_char(Stream, NewChar),
     process_stream(NewChar, Stream, NewAcc, Result).
 
-readFile(Filename, Characters) :-
+read_file(Filename, Characters) :-
     open(Filename, read, Stream),
     process_stream(Stream, Characters),
     close(Stream).
 
-changeExtension(Old, New) :-
+change_extension(Old, New) :- % from *.bf to *.c
     split_string(Old, '.', '', Parts),
     selectchk("bf", Parts, Purename),
     append(Purename, ['c'], NewName),
     atomics_to_string(NewName, '.', New).
 
-writeFile(FilenameBf, Content) :-
-    changeExtension(FilenameBf, FilenameC),
+write_file(FilenameBf, Content) :-
+    change_extension(FilenameBf, FilenameC),
     open(FilenameC, write, Stream),
-    writeContent(Content, Stream),
+    write_content(Content, Stream),
     close(Stream).
 
-writeContent([], _) :- !.
+write_content([], _) :- !.
 
-writeContent([Line | Rest], Stream) :-
+write_content([Line | Rest], Stream) :-
     writeln(Stream, Line),
-    writeContent(Rest, Stream).
+    write_content(Rest, Stream).
