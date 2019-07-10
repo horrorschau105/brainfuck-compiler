@@ -1,11 +1,12 @@
 :- consult('read_file.pl').
 :- consult('parser.pl').
+:- consult('compiler.pl').
 
 main :- 
     current_prolog_flag(argv, [Filename | _]), 
     readFile(Filename, FileContent), 
     parse(FileContent, AST),
-    print(AST), 
-    nl.
+    compile(AST, Program),
+    writeFile(Filename, Program).
 
 :- main, halt.

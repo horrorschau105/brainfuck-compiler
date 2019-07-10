@@ -45,7 +45,4 @@ removeUnknownTokens([KnownToken | T], Acc, Result) :-
 parse(FileContent, AST) :-
     phrase(lexer(Tokens), FileContent), 
     removeUnknownTokens(Tokens, KnownTokens),
-    phrase(instructions(AST), KnownTokens).
-    
-
-
+    phrase(program(AST), KnownTokens).
